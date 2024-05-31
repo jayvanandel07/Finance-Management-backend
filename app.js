@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const healthCheckRoute = require("./routes/healthCheckRoute");
 const userRoutes = require("./routes/userRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1", healthCheckRoute);
 
 // Error handling middleware
 app.use(errorHandler);
