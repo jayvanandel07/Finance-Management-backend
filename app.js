@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
-const morgan = require("morgan");
+const morgan = require("morgan"); //HTTP request logger middleware
 const bodyParser = require("body-parser");
 const healthCheckRoute = require("./routes/healthCheckRoute");
 const userRoutes = require("./routes/userRoutes");
