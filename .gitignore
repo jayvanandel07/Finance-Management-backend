@@ -1,0 +1,33 @@
+# dependencies
+/node_modules
+
+# production build files
+/build
+
+# environment variables
+.env
+.env.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Editor directories and files
+.idea
+.vscode
+
+# Jest coverage
+/coverage
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# nyc test coverage
+.nyc_output
+
