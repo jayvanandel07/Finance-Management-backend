@@ -26,13 +26,13 @@ my-money-lending-app/
 
 Implement security best practices to protect sensitive data:
 
-- **Use HTTPS:** Ensure all data transfer is encrypted using SSL/TLS.
-- **Environment Variables:** Use environment variables for configuration (e.g., database credentials, API keys).
+- **Use HTTPS:** Ensure all data transfer is encrypted using SSL/TLS.(have to do)
+- **Environment Variables:** Use environment variables for configuration (e.g., database credentials, API keys). (DONE)
 - **Input Validation:** Validate and sanitize user inputs to prevent injection attacks using libraries like `express-validator`.
 - **Authentication & Authorization:** Use robust authentication mechanisms (e.g., JWT, OAuth) and manage user roles and permissions effectively.
 - **Password Management:** Hash passwords using libraries like `bcrypt` before storing them in the database.
 - **Rate Limiting:** Implement rate limiting to prevent abuse and DoS attacks using libraries like `express-rate-limit`.
-- **Helmet:** Use `helmet` to set HTTP headers for security.
+- **Helmet:** Use `helmet` to set HTTP headers for security. (DONE)
   ```bash
   npm install helmet
   ```

@@ -1,0 +1,94 @@
+````markdown
+# Money Lending Application
+
+This is a Node.js application for managing a money lending business. It provides API endpoints for creating and managing users.
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/jayvanandel07/Finance-Management-backend
+```
+````
+
+2. Install dependencies:
+
+```bash
+cd Finance-Management-backend
+npm install
+```
+
+3. Set up environment variables:
+
+Create a `.env` file in the root directory and configure the following environment variables:
+
+```plaintext
+PORT=3000
+DB_HOST=localhost
+DB_USER=username
+DB_PASSWORD=password
+DB_NAME=my_database
+```
+
+Replace `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` with your MySQL database credentials.
+
+## File Structure
+
+```
+money-lending-app/
+│
+├── config/
+│   └── db.js          # Database configuration
+│
+├── middlewares/
+│   ├── validator.js   # Input validation middleware
+│   └── logger.js      # Logging middleware (using morgan)
+│
+├── routes/
+│   └── userRoutes.js  # User routes
+│
+├── services/
+│   └── userService.js # User service
+│
+├── .env               # Environment variables
+├── app.js             # Main application file
+└── package.json       # Project dependencies and scripts
+```
+
+## Usage
+
+1. Start the application:
+
+```bash
+npm start
+```
+
+2. Access the API endpoints:
+
+The API will be available at `http://localhost:3000/api/v1`.
+
+## API Endpoints
+
+- `POST /api/v1/users`: Create a new user
+- Other endpoints...
+
+## Dependencies
+
+- express: Fast, unopinionated, minimalist web framework for Node.js
+- mysql2: MySQL client for Node.js with promises support
+- express-validator: Easy input validation middleware for Express.js
+- helmet: Secure Express.js apps with various HTTP headers
+- morgan: HTTP request logger middleware for Node.js
+
+## Note
+
+- This application uses `pool.getConnection()` for managing database connections with a connection pool. For simple queries, you can also use `db.query()` directly. Choose the appropriate method based on your specific use case and performance requirements.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+
+```
