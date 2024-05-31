@@ -1,12 +1,23 @@
 const db = require("../config/db");
 
 const createUser = async (user) => {
-  const { name, email } = user;
+  const {
+    user_id,
+    name,
+    tamil_name,
+    alias,
+    email,
+    phone,
+    address,
+    cibil,
+    user_type,
+  } = user;
+
   const [result] = await db.query(
-    "INSERT INTO users (name, email) VALUES (?, ?)",
-    [name, email]
+    "INSERT INTO users (user_id, name, tamil_name, alias, email, phone, address, cibil, user_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [user_id, name, tamil_name, alias, email, phone, address, cibil, user_type]
   );
-  return { id: result.insertId, ...user };
+  return user;
 };
 
 const getUsers = async () => {
