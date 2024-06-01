@@ -1,6 +1,11 @@
 const db = require("../config/db");
 const HttpError = require("../utils/httpError");
 
+const getAllUserTypes = async () => {
+  const [result] = await db.query("SELECT * from user_types");
+  return result;
+};
+
 const createUserType = async (user_type) => {
   const { type_name } = user_type;
   const [existingUserType] = await db.query(
@@ -18,5 +23,6 @@ const createUserType = async (user_type) => {
 };
 
 module.exports = {
+  getAllUserTypes,
   createUserType,
 };
