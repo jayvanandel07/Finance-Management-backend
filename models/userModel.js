@@ -1,5 +1,5 @@
 const db = require("../config/db");
-const HttpError = require("../utils/HttpError");
+const HttpError = require("../utils/httpError");
 
 const createUser = async (user) => {
   const {
