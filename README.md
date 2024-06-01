@@ -87,6 +87,41 @@ The API will be available at `http://localhost:3000/api/v1`.
 
 `/api/v1`
 
+### User Types
+
+- Router endpoint `/userTypes`
+
+#### Create user type
+
+- endpoint `POST /`
+
+##### request
+
+- input
+
+```js
+{
+  type_name: string; // has to unique
+}
+```
+
+##### response
+
+```js
+// if user type already exist
+//  status code:409
+  {
+	"error": "User Type already Exists"
+  }
+
+// user created
+//  status code:201
+  {
+	"id": 2,
+	"type_name": "borrower"
+}
+```
+
 ### Users
 
 - Router endpoint `/users`

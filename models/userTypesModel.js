@@ -10,9 +10,10 @@ const createUserType = async (user_type) => {
   if (existingUserType.length > 0) {
     throw new HttpError("User Type already Exists", 409);
   }
-  const [result] = await db.query("INSERT INTO users (type_name) VALUES ( ?)", [
-    type_name,
-  ]);
+  const [result] = await db.query(
+    "INSERT INTO user_types (type_name) VALUES ( ?)",
+    [type_name]
+  );
   return { id: result.insertId, ...user_type };
 };
 

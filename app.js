@@ -5,7 +5,7 @@ const morgan = require("morgan"); //HTTP request logger middleware
 const bodyParser = require("body-parser");
 const {
   healthCheckRoute,
-  userTypeRoutes,
+  userTypesRoutes,
   userRoutes,
 } = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandler");
@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.use("/api/v1/userType", userTypeRoutes);
+app.use("/api/v1/userTypes", userTypesRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1", healthCheckRoute);
 

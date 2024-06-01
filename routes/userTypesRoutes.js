@@ -1,5 +1,5 @@
 const express = require("express");
-const userTypeController = require("../controllers/userTypeController");
+const userTypesController = require("../controllers/userTypesController");
 const { validate } = require("../middlewares/validator");
 const { body } = require("express-validator");
 
@@ -9,6 +9,6 @@ const createUserTypeValidator = [
   body("type_name").notEmpty().withMessage("type_name is required"),
   validate, // Run validation middleware
 ];
-router.post("/", createUserTypeValidator, userTypeController.createUserType);
+router.post("/", createUserTypeValidator, userTypesController.createUserType);
 
 module.exports = router;
