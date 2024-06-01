@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const HttpError = require("../utils/HttpError");
 
 const createUser = async (user) => {
   const {
@@ -12,7 +13,13 @@ const createUser = async (user) => {
     cibil,
     user_type,
   } = user;
-
+  const [existingUser] = await db.query(
+    "SELECT * FROM users WHERE user_id = ?",
+    [user_id]
+  );
+  if (existingUser.length > 0) {
+    throw new HttpError("User already Exists", 409);
+  }
   const [result] = await db.query(
     "INSERT INTO users (user_id, name, tamil_name, alias, email, phone, address, cibil, user_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [user_id, name, tamil_name, alias, email, phone, address, cibil, user_type]

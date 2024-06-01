@@ -81,6 +81,62 @@ The API will be available at `http://localhost:3000/api/v1`.
 - helmet: Secure Express.js apps with various HTTP headers
 - morgan: HTTP request logger middleware for Node.js
 
+## API Endpoints
+
+### Base URL
+
+`/api/v1`
+
+### Users
+
+- Router endpoint `/users`
+
+#### Create user
+
+- endpoint `POST /`
+
+##### request
+
+- input
+
+```js
+{
+    user_id: Number, // required
+    name: String, // required
+    tamil_name: String,
+    alias: String,
+    email: String, // has to be valid email
+    phone: String,
+    address: String,
+    cibil: Number,
+    user_type: Number // required , User Type Id
+}
+```
+
+##### response
+
+```js
+// if user already exist
+//  status code:409
+  {
+  error: "user already exists"
+  }
+
+// user created
+//  status code:201
+  {
+  user_id: 12323,
+  name: test,
+  tamil_name: test,
+  alias: test,
+  email: test@a.com,
+  phone: 234234,
+  address: 234/234 sdf,
+  cibil: 12,
+  user_type: 1
+  }
+```
+
 ## Note
 
 - This application uses `pool.getConnection()` for managing database connections with a connection pool. For simple queries, you can also use `db.query()` directly. Choose the appropriate method based on your specific use case and performance requirements.
