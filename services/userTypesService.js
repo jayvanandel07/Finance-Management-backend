@@ -1,7 +1,10 @@
 const userTypesModel = require("../models/userTypesModel");
 
-const getAllUserTypes = async (user_type) => {
-  return await userTypesModel.getAllUserTypes(user_type);
+const getAllUserTypes = async () => {
+  return await userTypesModel.getAllUserTypes();
+};
+const getUserTypeByName = async (type_name) => {
+  return await userTypesModel.getUserTypeByName(type_name);
 };
 const createUserType = async (user_type) => {
   return await userTypesModel.createUserType(user_type);
@@ -9,5 +12,6 @@ const createUserType = async (user_type) => {
 
 module.exports = {
   getAllUserTypes,
+  getUserTypeByName,
   createUserType,
 };

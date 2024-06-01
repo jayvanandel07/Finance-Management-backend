@@ -155,6 +155,31 @@ The API will be available at `http://localhost:3000/api/v1`.
 	}
 ```
 
+#### get user type by name
+
+- endpoint `get /:type_name`
+
+##### request
+
+param type_name
+`/api/v1/userTypes/lender`
+
+##### response
+
+```js
+// if user no type exists
+//  status code:200
+  []
+
+// user type exist
+//  status code:200
+// returns array of object of user types
+	{
+		"user_type_id": 1,
+		"type_name": "lender"
+	}
+```
+
 ### Users
 
 - Router endpoint `/users`

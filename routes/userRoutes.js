@@ -15,7 +15,9 @@ const createUserValidator = [
   body("user_type").notEmpty().withMessage("user_type is required"),
   validate, // Run validation middleware
 ];
-router.post("/", createUserValidator, userController.createUser);
+
 router.get("/", userController.getUsers);
+
+router.post("/", createUserValidator, userController.createUser);
 
 module.exports = router;

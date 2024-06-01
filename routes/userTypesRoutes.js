@@ -11,6 +11,7 @@ const createUserTypeValidator = [
 ];
 
 router.get("/", userTypesController.getAllUserTypes);
+router.get("/:type_name", userTypesController.getUserTypeByName);
 
 router.post("/", createUserTypeValidator, userTypesController.createUserType);
 
