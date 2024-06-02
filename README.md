@@ -246,6 +246,89 @@ param type_name
 
 - Router endpoint `/users`
 
+#### get all users
+
+- endpoint `GET /`
+
+##### request
+
+no body
+
+##### response
+
+```
+[
+	{
+		"user_id": 765948,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": null,
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-06-02T11:54:24.000Z",
+		"updated_at": "2024-06-02T11:54:24.000Z"
+	},
+	{
+		"user_id": 1234567101112130,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": null,
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-06-01T17:26:47.000Z",
+		"updated_at": "2024-06-01T17:26:47.000Z"
+	},
+	{
+		"user_id": 12345678910111322,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": "john.doe@example.com",
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-05-31T19:19:45.000Z",
+		"updated_at": "2024-05-31T19:19:45.000Z"
+	},
+
+]
+```
+
+#### get users by id Or name
+
+- endpoint `GET /:user`
+
+##### request
+
+`/594`
+
+##### response
+
+```
+[
+	{
+		"user_id": 765948,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": null,
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-06-02T11:54:24.000Z",
+		"updated_at": "2024-06-02T11:54:24.000Z"
+	}
+]
+```
+
 #### Create user
 
 - endpoint `POST /`
@@ -270,7 +353,7 @@ param type_name
 
 ##### response
 
-```js
+```
 // if user already exist
 //  status code:409
   {
@@ -290,6 +373,93 @@ param type_name
   cibil: 12,
   user_type: 1
   }
+```
+
+#### Update user
+
+- endpoint `PUT /:user_id`
+
+##### request
+
+`PUT /7659480`
+
+- input
+
+```js
+{
+	"user_id":765948,
+	"name": "jayvan",
+	"tamil_name": null,
+	"alias": null,
+	"user_type": 5
+}
+```
+
+##### response
+
+```
+// if user already exist
+//  status code:409
+  {
+	"error": "user id already exists!"
+}
+
+// user updated
+//  status code:200
+  {
+	"message": "User Updated!",
+	"user": {
+		"user_id": 7659480,
+		"name": "jayvan",
+		"tamil_name": "",
+		"alias": "",
+		"email": "",
+		"phone": "",
+		"address": "",
+		"cibil": "",
+		"user_type": 5,
+		"updated_user_id": "7659480"
+	}
+}
+```
+
+#### delete user
+
+- endpoint `DELETE /:user_id`
+
+##### request
+
+`DELETE /7659480`
+
+##### response
+
+```
+// if user does not exist
+//  status code:404
+  {
+	"error": "User does not Exist"
+}
+
+// user deleted
+//  status code:200
+  {
+	"message": "user successfully deleted!",
+	"user_deleted": [
+		{
+			"user_id": 7659480,
+			"name": "John Doe",
+			"tamil_name": "",
+			"alias": "",
+			"email": "",
+			"phone": "",
+			"address": "",
+			"cibil": "",
+			"user_type": 1,
+			"created_at": "2024-06-02T14:29:18.000Z",
+			"updated_at": "2024-06-02T14:29:18.000Z"
+		}
+	]
+}
 ```
 
 ## Note
