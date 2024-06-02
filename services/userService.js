@@ -14,10 +14,14 @@ const createUser = async (user) => {
 const updateUser = async (user) => {
   return await userModel.updateUser(user);
 };
+const deleteUserById = async (user_id) => {
+  return await userModel.deleteUserById(user_id);
+};
 
 module.exports = {
   getUsers,
   getUserByIdOrName,
   createUser,
   updateUser,
+  deleteUserById,
 };

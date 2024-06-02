@@ -15,7 +15,7 @@ const createUserValidator = [
   body("user_type").notEmpty().withMessage("user_type is required"),
   validate, // Run validation middleware
 ];
-const updateUserValidator = [
+const updateDeleteUserValidator = [
   param("user_id")
     .isNumeric()
     .withMessage("user_id should be a integer")
@@ -28,6 +28,11 @@ router.get("/", userController.getUsers);
 router.get("/:user", userController.getUserByIdOrName);
 
 router.post("/", createUserValidator, userController.createUser);
-router.put("/:user_id", updateUserValidator, userController.updateUser);
+router.put("/:user_id", updateDeleteUserValidator, userController.updateUser);
+router.delete(
+  "/:user_id",
+  updateDeleteUserValidator,
+  userController.deleteUserById
+);
 
 module.exports = router;

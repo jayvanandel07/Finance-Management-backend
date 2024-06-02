@@ -423,6 +423,45 @@ no body
 }
 ```
 
+#### delete user
+
+- endpoint `DELETE /:user_id`
+
+##### request
+
+`DELETE /7659480`
+
+##### response
+
+```
+// if user does not exist
+//  status code:404
+  {
+	"error": "User does not Exist"
+}
+
+// user deleted
+//  status code:200
+  {
+	"message": "user successfully deleted!",
+	"user_deleted": [
+		{
+			"user_id": 7659480,
+			"name": "John Doe",
+			"tamil_name": "",
+			"alias": "",
+			"email": "",
+			"phone": "",
+			"address": "",
+			"cibil": "",
+			"user_type": 1,
+			"created_at": "2024-06-02T14:29:18.000Z",
+			"updated_at": "2024-06-02T14:29:18.000Z"
+		}
+	]
+}
+```
+
 ## Note
 
 - This application uses `pool.getConnection()` for managing database connections with a connection pool. For simple queries, you can also use `db.query()` directly. Choose the appropriate method based on your specific use case and performance requirements.

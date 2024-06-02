@@ -107,9 +107,38 @@ const updateUser = async (user) => {
     throw error;
   }
 };
+
+const deleteUserById = async (user_id) => {
+  const [user] = await db.query("SELECT * FROM users WHERE user_id = ?", [
+    user_id,
+  ]);
+  if (user.length === 0) {
+    throw new HttpError("User does not Exist", 404);
+  }
+  try {
+    const [result] = await db.query("DELETE FROM users WHERE user_id=?", [
+      user_id,
+    ]);
+
+    return {
+      message: "user successfully deleted!",
+      user_deleted: user,
+    };
+  } catch (error) {
+    console.log("console:", error);
+    if (error.sqlMessage.includes("foreign key constraint")) {
+      throw new HttpError(
+        "Cannot delete user due to foreign key constraint",
+        400
+      );
+    }
+    throw error;
+  }
+};
 module.exports = {
   getUsers,
   getUserByIdOrName,
   createUser,
   updateUser,
+  deleteUserById,
 };

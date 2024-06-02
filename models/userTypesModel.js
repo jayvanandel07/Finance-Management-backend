@@ -75,7 +75,7 @@ const deleteUserType = async (user_type) => {
     console.log("console:", error);
     if (error.sqlMessage.includes("foreign key constraint")) {
       throw new HttpError(
-        "Cannot delete user due to foreign key constraint",
+        "Cannot delete user type due to foreign key constraint",
         400
       );
     }
