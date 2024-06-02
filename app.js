@@ -7,6 +7,7 @@ const {
   healthCheckRoute,
   userTypesRoutes,
   userRoutes,
+  loanTypesRoutes,
 } = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 app.use("/api/v1/userTypes", userTypesRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/loanTypes", loanTypesRoutes);
 app.use("/api/v1", healthCheckRoute);
 
 // Error handling middleware
