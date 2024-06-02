@@ -24,3 +24,14 @@ exports.createUser = async (req, res, next) => {
     next(error);
   }
 };
+exports.updateUser = async (req, res, next) => {
+  try {
+    const user = await userService.updateUser({
+      ...req.body,
+      update_user_id: req.params.user_id,
+    });
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};

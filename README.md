@@ -375,6 +375,54 @@ no body
   }
 ```
 
+#### Update user
+
+- endpoint `PUT /:user_id`
+
+##### request
+
+`PUT /7659480`
+
+- input
+
+```js
+{
+	"user_id":765948,
+	"name": "jayvan",
+	"tamil_name": null,
+	"alias": null,
+	"user_type": 5
+}
+```
+
+##### response
+
+```
+// if user already exist
+//  status code:409
+  {
+	"error": "user id already exists!"
+}
+
+// user updated
+//  status code:200
+  {
+	"message": "User Updated!",
+	"user": {
+		"user_id": 7659480,
+		"name": "jayvan",
+		"tamil_name": "",
+		"alias": "",
+		"email": "",
+		"phone": "",
+		"address": "",
+		"cibil": "",
+		"user_type": 5,
+		"updated_user_id": "7659480"
+	}
+}
+```
+
 ## Note
 
 - This application uses `pool.getConnection()` for managing database connections with a connection pool. For simple queries, you can also use `db.query()` directly. Choose the appropriate method based on your specific use case and performance requirements.

@@ -11,9 +11,13 @@ const getUserByIdOrName = async (user) => {
 const createUser = async (user) => {
   return await userModel.createUser(user);
 };
+const updateUser = async (user) => {
+  return await userModel.updateUser(user);
+};
 
 module.exports = {
   getUsers,
   getUserByIdOrName,
   createUser,
+  updateUser,
 };
