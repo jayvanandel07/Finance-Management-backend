@@ -246,6 +246,89 @@ param type_name
 
 - Router endpoint `/users`
 
+#### get all users
+
+- endpoint `GET /`
+
+##### request
+
+no body
+
+##### response
+
+```
+[
+	{
+		"user_id": 765948,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": null,
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-06-02T11:54:24.000Z",
+		"updated_at": "2024-06-02T11:54:24.000Z"
+	},
+	{
+		"user_id": 1234567101112130,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": null,
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-06-01T17:26:47.000Z",
+		"updated_at": "2024-06-01T17:26:47.000Z"
+	},
+	{
+		"user_id": 12345678910111322,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": "john.doe@example.com",
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-05-31T19:19:45.000Z",
+		"updated_at": "2024-05-31T19:19:45.000Z"
+	},
+
+]
+```
+
+#### get users by id Or name
+
+- endpoint `GET /:user`
+
+##### request
+
+`/594`
+
+##### response
+
+```
+[
+	{
+		"user_id": 765948,
+		"name": "John Doe",
+		"tamil_name": "",
+		"alias": "",
+		"email": null,
+		"phone": null,
+		"address": null,
+		"cibil": null,
+		"user_type": 1,
+		"created_at": "2024-06-02T11:54:24.000Z",
+		"updated_at": "2024-06-02T11:54:24.000Z"
+	}
+]
+```
+
 #### Create user
 
 - endpoint `POST /`
@@ -270,7 +353,7 @@ param type_name
 
 ##### response
 
-```js
+```
 // if user already exist
 //  status code:409
   {

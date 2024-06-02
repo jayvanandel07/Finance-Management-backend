@@ -1,6 +1,20 @@
 const db = require("../config/db");
 const HttpError = require("../utils/httpError");
 
+const getUsers = async () => {
+  const [rows] = await db.query("SELECT * FROM users");
+  return rows;
+};
+
+const getUserByIdOrName = async (user) => {
+  const searchPattern = `%${user}%`;
+  const [result] = await db.query(
+    "SELECT * FROM users WHERE CAST(user_id AS CHAR) LIKE ? OR name LIKE ? OR tamil_name LIKE ?",
+    [searchPattern, searchPattern, searchPattern]
+  );
+  return result;
+};
+
 const createUser = async (user) => {
   const {
     user_id,
@@ -27,12 +41,8 @@ const createUser = async (user) => {
   return user;
 };
 
-const getUsers = async () => {
-  const [rows] = await db.query("SELECT * FROM users");
-  return rows;
-};
-
 module.exports = {
-  createUser,
   getUsers,
+  getUserByIdOrName,
+  createUser,
 };

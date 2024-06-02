@@ -17,6 +17,7 @@ const createUserValidator = [
 ];
 
 router.get("/", userController.getUsers);
+router.get("/:user", userController.getUserByIdOrName);
 
 router.post("/", createUserValidator, userController.createUser);
 
