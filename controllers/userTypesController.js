@@ -36,3 +36,11 @@ exports.updateUserType = async (req, res, next) => {
     next(error);
   }
 };
+exports.deleteUserType = async (req, res, next) => {
+  try {
+    const deleteUserType = await userTypesService.deleteUserType(req.body);
+    res.status(200).json(deleteUserType);
+  } catch (error) {
+    next(error);
+  }
+};

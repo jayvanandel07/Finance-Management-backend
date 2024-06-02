@@ -210,6 +210,38 @@ param type_name
 }
 ```
 
+#### delete user type
+
+- endpoint `DELETE /`
+
+##### request
+
+```js
+{
+	"type_name": "borrower"
+}
+```
+
+##### response
+
+```js
+// if user no type exists
+//  status code:404
+  {
+	"error": "User Type does not Exist"
+  }
+
+// user type updated
+//  status code:200
+{
+	"message": "user type successfully deleted!",
+	"user_type_deleted": {
+		"user_type_id": 4,
+		"type_name": "borrower"
+	}
+}
+```
+
 ### Users
 
 - Router endpoint `/users`

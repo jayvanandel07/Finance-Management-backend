@@ -5,7 +5,7 @@ const { body } = require("express-validator");
 
 const router = express.Router();
 
-const createUserTypeValidator = [
+const createDeleteUserTypeValidator = [
   body("type_name").notEmpty().withMessage("type_name is required"),
   validate, // Run validation middleware
 ];
@@ -20,7 +20,16 @@ const updateUserTypeValidator = [
 router.get("/", userTypesController.getAllUserTypes);
 router.get("/:type_name", userTypesController.getUserTypeByName);
 
-router.post("/", createUserTypeValidator, userTypesController.createUserType);
+router.post(
+  "/",
+  createDeleteUserTypeValidator,
+  userTypesController.createUserType
+);
 router.put("/", updateUserTypeValidator, userTypesController.updateUserType);
+router.delete(
+  "/",
+  createDeleteUserTypeValidator,
+  userTypesController.deleteUserType
+);
 
 module.exports = router;
