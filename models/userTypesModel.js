@@ -26,11 +26,31 @@ const createUserType = async (user_type) => {
     "INSERT INTO user_types (type_name) VALUES ( ?)",
     [type_name]
   );
-  return { id: result.insertId, ...user_type };
+  return { user_type_id: result.insertId, ...user_type };
 };
 
+const updateUserType = async (user_type) => {
+  const { type_name, updated_type_name } = user_type;
+  const [existingUserType] = await db.query(
+    "SELECT * FROM user_types WHERE type_name = ?",
+    [type_name]
+  );
+  if (existingUserType.length === 0) {
+    throw new HttpError("User Type does not Exist", 404);
+  }
+  const [result] = await db.query(
+    "UPDATE user_types SET type_name=? WHERE type_name=?",
+    [updated_type_name, type_name]
+  );
+
+  return {
+    user_type_id: existingUserType[0].user_type_id,
+    type_name: updated_type_name,
+  };
+};
 module.exports = {
   getAllUserTypes,
   getUserTypeByName,
   createUserType,
+  updateUserType,
 };

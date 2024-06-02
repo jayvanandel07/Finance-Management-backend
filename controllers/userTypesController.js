@@ -27,3 +27,12 @@ exports.createUserType = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.updateUserType = async (req, res, next) => {
+  try {
+    const updatedUserType = await userTypesService.updateUserType(req.body);
+    res.status(200).json(updatedUserType);
+  } catch (error) {
+    next(error);
+  }
+};

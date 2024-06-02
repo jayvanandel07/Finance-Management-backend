@@ -167,7 +167,7 @@ param type_name
 ##### response
 
 ```js
-// if user no type exists
+// if no user type exists
 //  status code:200
   []
 
@@ -178,6 +178,36 @@ param type_name
 		"user_type_id": 1,
 		"type_name": "lender"
 	}
+```
+
+#### update user type
+
+- endpoint `PUT /`
+
+##### request
+
+```js
+{
+	"type_name": "borroer",
+	"updated_type_name":"Borrower"
+}
+```
+
+##### response
+
+```js
+// if user no type exists
+//  status code:404
+  {
+	"error": "User Type does not Exist"
+  }
+
+// user type updated
+//  status code:200
+{
+	"user_type_id": 2,
+	"type_name": "Borrower"
+}
 ```
 
 ### Users
