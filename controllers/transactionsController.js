@@ -10,7 +10,7 @@ exports.getAllTransactions = async (req, res, next) => {
 };
 exports.getTransactionById = async (req, res, next) => {
   try {
-    const transaction = await transactionsService.getTransactionsById(
+    const transaction = await transactionsService.getTransactionById(
       req.params.transaction_id
     );
     res.status(200).json(transaction);
@@ -18,10 +18,10 @@ exports.getTransactionById = async (req, res, next) => {
     next(error);
   }
 };
-exports.createTransactions = async (req, res, next) => {
+exports.createTransaction = async (req, res, next) => {
   try {
-    const transactions = await transactionsService.createTransactions(req.body);
-    res.status(201).json(transactions);
+    const transaction = await transactionsService.createTransaction(req.body);
+    res.status(201).json(transaction);
   } catch (error) {
     next(error);
   }

@@ -8,8 +8,8 @@ const getTransactionById = async (transaction_id) => {
   return await transactionsModel.getTransactionById(transaction_id);
 };
 
-const createTransaction = async (transactions) => {
-  return await transactionsModel.createTransaction(transactions);
+const createTransaction = async (transaction) => {
+  return await transactionsModel.createTransaction(transaction);
 };
 const updateTransaction = async (transactions) => {
   return await transactionsModel.updateTransaction(transactions);
