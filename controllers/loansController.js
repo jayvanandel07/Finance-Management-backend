@@ -1,0 +1,19 @@
+const loansService = require("../services/loansService");
+
+exports.getAllLoans = async (req, res, next) => {
+  try {
+    const loans = await loansService.getAllLoans();
+    res.status(200).json(loans);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getLoanById = async (req, res, next) => {
+  try {
+    const loan = await loansService.getLoanById(req.params.loan_id);
+    res.status(200).json(loan);
+  } catch (error) {
+    next(error);
+  }
+};
