@@ -36,3 +36,13 @@ exports.updateLoan = async (req, res, next) => {
     next(error);
   }
 };
+exports.deleteLoanById = async (req, res, next) => {
+  try {
+    const loan = await loansService.deleteLoanById(
+      parseInt(req.params.loan_id)
+    );
+    res.status(200).json(loan);
+  } catch (error) {
+    next(error);
+  }
+};

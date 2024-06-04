@@ -12,10 +12,14 @@ const createLoan = async (loan) => {
 const updateLoan = async (loan) => {
   return await loansModel.updateLoan(loan);
 };
+const deleteLoanById = async (loan_id) => {
+  return await loansModel.deleteLoanById(loan_id);
+};
 
 module.exports = {
   getAllLoans,
   getLoanById,
   createLoan,
   updateLoan,
+  deleteLoanById,
 };

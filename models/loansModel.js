@@ -124,7 +124,7 @@ const updateLoan = async (loan) => {
     profit: profit ?? existingLoan[0].profit,
     status: status ?? existingLoan[0].status,
   };
-  const [users] = await db.query(
+  const [loans] = await db.query(
     "UPDATE loans SET user_id=?, amount=?, interest_rate=?, loan_type=?, loan_created=?, start_date=?, end_date=?, next_due_date=?, balance=?, profit=?, status=? WHERE loan_id=?",
     [
       user_id ?? existingLoan[0].user_id,
@@ -146,10 +146,38 @@ const updateLoan = async (loan) => {
     loan_updated: loan,
   };
 };
+const deleteLoanById = async (loan_id) => {
+  const [loans] = await db.query("SELECT * FROM loans WHERE loan_id = ?", [
+    loan_id,
+  ]);
+  if (loans.length === 0) {
+    throw new HttpError("loan does not Exist", 404);
+  }
+  try {
+    const [result] = await db.query("DELETE FROM loans WHERE loan_id=?", [
+      loan_id,
+    ]);
+
+    return {
+      message: "loan successfully deleted!",
+      loan_deleted: loans[0],
+    };
+  } catch (error) {
+    console.log("console:", error);
+    if (error.sqlMessage.includes("foreign key constraint")) {
+      throw new HttpError(
+        "Cannot delete loan due to foreign key constraint",
+        400
+      );
+    }
+    throw error;
+  }
+};
 
 module.exports = {
   getAllLoans,
   getLoanById,
   createLoan,
   updateLoan,
+  deleteLoanById,
 };
