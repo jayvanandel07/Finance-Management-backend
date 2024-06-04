@@ -37,7 +37,57 @@ const getLoanById = async (loan_id) => {
   return rows;
 };
 
+const createLoan = async (loan) => {
+  const {
+    user_id,
+    amount,
+    interest_rate,
+    loan_type,
+    loan_created,
+    start_date,
+    end_date,
+    next_due_date,
+    balance,
+    profit,
+    status,
+  } = loan;
+  console.log(loan);
+  const [result] = await db.query(
+    `INSERT INTO loans (
+    user_id, 
+    amount,
+    interest_rate,
+    loan_type,
+    loan_created,
+    start_date,
+    end_date,
+    next_due_date,
+    balance,
+    profit,
+    status) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+    [
+      user_id,
+      amount,
+      interest_rate,
+      loan_type,
+      loan_created,
+      start_date,
+      end_date,
+      next_due_date,
+      balance,
+      profit,
+      status,
+    ]
+  );
+  console.log(result);
+  return {
+    loan_id: result.insertId,
+    ...loan,
+  };
+};
+
 module.exports = {
   getAllLoans,
   getLoanById,
+  createLoan,
 };

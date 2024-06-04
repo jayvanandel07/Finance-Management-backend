@@ -10,7 +10,23 @@ const getLoanByIdValidator = [
   validate,
 ];
 
+const createLoanValidator = [
+  body("user_id").notEmpty().withMessage("user_id is required."),
+  body("amount").notEmpty().withMessage("amount is required."),
+  body("interest_rate").notEmpty().withMessage("interest_rate is required."),
+  body("loan_type").notEmpty().withMessage("loan_type is required."),
+  body("start_date").notEmpty().withMessage("start_date is required."),
+  body("end_date").notEmpty().withMessage("end_date is required."),
+  body("next_due_date").notEmpty().withMessage("next_due_date is required."),
+  body("balance").notEmpty().withMessage("balance is required."),
+  body("profit").notEmpty().withMessage("profit is required."),
+  body("status").notEmpty().withMessage("status is required."),
+  validate,
+];
+
 router.get("/", loansController.getAllLoans);
 router.get("/:loan_id", getLoanByIdValidator, loansController.getLoanById);
+
+router.post("/", createLoanValidator, loansController.createLoan);
 
 module.exports = router;

@@ -17,3 +17,11 @@ exports.getLoanById = async (req, res, next) => {
     next(error);
   }
 };
+exports.createLoan = async (req, res, next) => {
+  try {
+    const loan = await loansService.createLoan(req.body);
+    res.status(200).json(loan);
+  } catch (error) {
+    next(error);
+  }
+};

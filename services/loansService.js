@@ -6,8 +6,12 @@ const getAllLoans = async () => {
 const getLoanById = async (loan_id) => {
   return await loansModel.getLoanById(loan_id);
 };
+const createLoan = async (loan) => {
+  return await loansModel.createLoan(loan);
+};
 
 module.exports = {
   getAllLoans,
   getLoanById,
+  createLoan,
 };
