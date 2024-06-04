@@ -24,9 +24,15 @@ const createLoanValidator = [
   validate,
 ];
 
+const updateLoanValidator = [
+  param("loan_id").notEmpty().withMessage("loan_id is required"),
+  validate,
+];
+
 router.get("/", loansController.getAllLoans);
 router.get("/:loan_id", getLoanByIdValidator, loansController.getLoanById);
 
 router.post("/", createLoanValidator, loansController.createLoan);
+router.put("/:loan_id", updateLoanValidator, loansController.updateLoan);
 
 module.exports = router;

@@ -51,7 +51,7 @@ const createLoan = async (loan) => {
     profit,
     status,
   } = loan;
-  console.log(loan);
+
   const [result] = await db.query(
     `INSERT INTO loans (
     user_id, 
@@ -79,10 +79,71 @@ const createLoan = async (loan) => {
       status,
     ]
   );
-  console.log(result);
+
   return {
     loan_id: result.insertId,
     ...loan,
+  };
+};
+
+const updateLoan = async (loan) => {
+  const {
+    loan_id,
+    user_id,
+    amount,
+    interest_rate,
+    loan_type,
+    loan_created,
+    start_date,
+    end_date,
+    next_due_date,
+    balance,
+    profit,
+    status,
+  } = loan;
+
+  const [existingLoan] = await db.query(
+    "SELECT * FROM loans WHERE loan_id in (?)",
+    [loan_id]
+  );
+
+  if (existingLoan.length === 0) {
+    throw new HttpError("Loan does not Exist", 404);
+  }
+  loan = {
+    loan_id,
+    user_id: user_id ?? existingLoan[0].user_id,
+    amount: amount ?? existingLoan[0].amount,
+    interest_rate: interest_rate ?? existingLoan[0].interest_rate,
+    loan_type: loan_type ?? existingLoan[0].loan_type,
+    loan_created: loan_created ?? existingLoan[0].loan_created,
+    start_date: start_date ?? existingLoan[0].start_date,
+    end_date: end_date ?? existingLoan[0].end_date,
+    next_due_date: next_due_date ?? existingLoan[0].next_due_date,
+    balance: balance ?? existingLoan[0].balance,
+    profit: profit ?? existingLoan[0].profit,
+    status: status ?? existingLoan[0].status,
+  };
+  const [users] = await db.query(
+    "UPDATE loans SET user_id=?, amount=?, interest_rate=?, loan_type=?, loan_created=?, start_date=?, end_date=?, next_due_date=?, balance=?, profit=?, status=? WHERE loan_id=?",
+    [
+      user_id ?? existingLoan[0].user_id,
+      amount ?? existingLoan[0].amount,
+      interest_rate ?? existingLoan[0].interest_rate,
+      loan_type ?? existingLoan[0].loan_type,
+      loan_created ?? existingLoan[0].loan_created,
+      start_date ?? existingLoan[0].start_date,
+      end_date ?? existingLoan[0].end_date,
+      next_due_date ?? existingLoan[0].next_due_date,
+      balance ?? existingLoan[0].balance,
+      profit ?? existingLoan[0].profit,
+      status ?? existingLoan[0].status,
+      loan_id,
+    ]
+  );
+  return {
+    message: "Loan updated Successfully",
+    loan_updated: loan,
   };
 };
 
@@ -90,4 +151,5 @@ module.exports = {
   getAllLoans,
   getLoanById,
   createLoan,
+  updateLoan,
 };

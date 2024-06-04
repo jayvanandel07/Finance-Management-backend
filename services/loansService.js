@@ -9,9 +9,13 @@ const getLoanById = async (loan_id) => {
 const createLoan = async (loan) => {
   return await loansModel.createLoan(loan);
 };
+const updateLoan = async (loan) => {
+  return await loansModel.updateLoan(loan);
+};
 
 module.exports = {
   getAllLoans,
   getLoanById,
   createLoan,
+  updateLoan,
 };
