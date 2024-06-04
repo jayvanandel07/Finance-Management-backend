@@ -3,6 +3,7 @@ const userTypesRoutes = require("./userTypesRoutes");
 const userRoutes = require("./userRoutes");
 const loanTypesRoutes = require("./loanTypesRoutes");
 const loansRoutes = require("./loansRoutes");
+const transactionsRoutes = require("./transactionsRoutes");
 
 module.exports = {
   healthCheckRoute,
@@ -10,4 +11,5 @@ module.exports = {
   userRoutes,
   loanTypesRoutes,
   loansRoutes,
+  transactionsRoutes,
 };
