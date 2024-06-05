@@ -8,10 +8,10 @@ exports.getAllUserTypes = async (req, res, next) => {
     next(error);
   }
 };
-exports.getUserTypeByName = async (req, res, next) => {
+exports.getUserTypeById = async (req, res, next) => {
   try {
-    const userType = await userTypesService.getUserTypeByName(
-      req.params.type_name
+    const userType = await userTypesService.getUserTypeById(
+      req.params.user_type_id
     );
     res.status(200).json(userType);
   } catch (error) {
@@ -30,7 +30,10 @@ exports.createUserType = async (req, res, next) => {
 
 exports.updateUserType = async (req, res, next) => {
   try {
-    const updatedUserType = await userTypesService.updateUserType(req.body);
+    const updatedUserType = await userTypesService.updateUserType({
+      user_type_id: req.params.user_type_id,
+      ...req.body,
+    });
     res.status(200).json(updatedUserType);
   } catch (error) {
     next(error);
@@ -38,8 +41,10 @@ exports.updateUserType = async (req, res, next) => {
 };
 exports.deleteUserType = async (req, res, next) => {
   try {
-    const deleteUserType = await userTypesService.deleteUserType(req.body);
-    res.status(200).json(deleteUserType);
+    const deletedUserType = await userTypesService.deleteUserType(
+      req.params.user_type_id
+    );
+    res.status(200).json(deletedUserType);
   } catch (error) {
     next(error);
   }
