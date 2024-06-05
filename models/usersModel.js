@@ -3,7 +3,7 @@ const HttpError = require("../utils/httpError");
 
 const getUsers = async () => {
   const [rows] = await db.query(
-    `SELECT * FROM 
+    `SELECT u.*, ut.type_name AS user_type_name FROM 
     users AS u 
     JOIN user_types ut 
     ON u.user_type_id = ut.user_type_id 
@@ -14,7 +14,7 @@ const getUsers = async () => {
 
 const getUserById = async (user_id) => {
   const [result] = await db.query(
-    `SELECT * FROM 
+    `SELECT u.*,ut.type_name AS user_type_name FROM 
     users AS u 
     JOIN user_types ut 
     ON u.user_type_id = ut.user_type_id 
