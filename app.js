@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const {
   healthCheckRoute,
   userTypesRoutes,
-  userRoutes,
+  usersRoutes,
   loanTypesRoutes,
   loansRoutes,
   transactionsRoutes,
@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/v1/userTypes", userTypesRoutes);
-app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/users", usersRoutes);
 app.use("/api/v1/loanTypes", loanTypesRoutes);
 app.use("/api/v1/loans", loansRoutes);
 app.use("/api/v1/transactions", transactionsRoutes);

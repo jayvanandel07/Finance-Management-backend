@@ -1,5 +1,5 @@
 const express = require("express");
-const userController = require("../controllers/userController");
+const usersController = require("../controllers/usersController");
 const { validate } = require("../middlewares/validator");
 const { param, body } = require("express-validator");
 
@@ -24,15 +24,15 @@ const updateDeleteUserValidator = [
   validate, // Run validation middleware
 ];
 
-router.get("/", userController.getUsers);
-router.get("/:user", userController.getUserByIdOrName);
+router.get("/", usersController.getUsers);
+router.get("/:user", usersController.getUserByIdOrName);
 
-router.post("/", createUserValidator, userController.createUser);
-router.put("/:user_id", updateDeleteUserValidator, userController.updateUser);
+router.post("/", createUserValidator, usersController.createUser);
+router.put("/:user_id", updateDeleteUserValidator, usersController.updateUser);
 router.delete(
   "/:user_id",
   updateDeleteUserValidator,
-  userController.deleteUserById
+  usersController.deleteUserById
 );
 
 module.exports = router;
