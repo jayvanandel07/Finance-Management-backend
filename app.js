@@ -10,6 +10,7 @@ const {
   loanTypesRoutes,
   loansRoutes,
   transactionsRoutes,
+  accountsRoutes,
 } = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -29,6 +30,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/loanTypes", loanTypesRoutes);
 app.use("/api/v1/loans", loansRoutes);
 app.use("/api/v1/transactions", transactionsRoutes);
+app.use("/api/v1/accounts", accountsRoutes);
 app.use("/api/v1", healthCheckRoute);
 
 // Error handling middleware
