@@ -71,7 +71,10 @@ const updateUserType = async (user_type) => {
       [user_type_id]
     );
 
-    return updatedUserType;
+    return {
+      message: "user type updated!",
+      updated_user_type: updatedUserType,
+    };
   } catch (error) {
     await conn.rollback();
     throw error;

@@ -5,38 +5,37 @@ const { param, body } = require("express-validator");
 
 const router = express.Router();
 
-const createDeleteLoanTypeValidator = [
-  body("type_name").notEmpty().withMessage("type_name is required"),
+const loan_type_id_validator = [
+  param("loan_type_id")
+    .isNumeric()
+    .withMessage("loan_type_id should of type integer.")
+    .notEmpty()
+    .withMessage("loan_type_id is required."),
   validate, // Run validation middleware
 ];
-const updateLoanTypeValidator = [
-  param("type_name")
-    .isString()
-    .withMessage("type_name should of type string.")
-    .notEmpty()
-    .withMessage("type_name is required"),
-  body("updated_type_name")
-    .notEmpty()
-    .withMessage("updated_type_name is required"),
+const createLoanTypeValidator = [
+  body("type_name").notEmpty().withMessage("type_name is required."),
+  body("interest_rate").notEmpty().withMessage("interest_rate is required."),
+  body("tenure").notEmpty().withMessage("tenure is required."),
   validate, // Run validation middleware
 ];
 
 router.get("/", loanTypesController.getAllLoanTypes);
-router.get("/:type_name", loanTypesController.getLoanTypeByName);
-
-router.post(
-  "/",
-  createDeleteLoanTypeValidator,
-  loanTypesController.createLoanType
+router.get(
+  "/:loan_type_id",
+  loan_type_id_validator,
+  loanTypesController.getLoanTypeById
 );
+
+router.post("/", createLoanTypeValidator, loanTypesController.createLoanType);
 router.put(
-  "/:type_name",
-  updateLoanTypeValidator,
+  "/:loan_type_id",
+  loan_type_id_validator,
   loanTypesController.updateLoanType
 );
 router.delete(
-  "/",
-  createDeleteLoanTypeValidator,
+  "/:loan_type_id",
+  loan_type_id_validator,
   loanTypesController.deleteLoanType
 );
 
