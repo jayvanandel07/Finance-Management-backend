@@ -1,4 +1,10 @@
 const db = require("../config/db");
+const {
+  splitFrequencyString,
+  calculateStartDate,
+  calculateEndDate,
+  calculateNextDueDate,
+} = require("../utils/common.service");
 const HttpError = require("../utils/httpError");
 
 const getAllLoans = async () => {
@@ -13,7 +19,8 @@ const getAllLoans = async () => {
     FROM loans AS l JOIN users AS u 
     ON l.user_id=u.user_id 
     JOIN loan_types AS lt 
-    ON l.loan_type = lt.loan_type_id`
+    ON l.loan_type_id = lt.loan_type_id
+    WHERE l.is_deleted=0`
   );
   return rows;
 };
@@ -30,8 +37,8 @@ const getLoanById = async (loan_id) => {
     FROM loans AS l JOIN users AS u 
     ON l.user_id=u.user_id 
     JOIN loan_types AS lt 
-    ON l.loan_type = lt.loan_type_id 
-    WHERE l.loan_id=?`,
+    ON l.loan_type_id = lt.loan_type_id 
+    WHERE l.loan_id=? AND l.is_deleted=0`,
     [loan_id]
   );
   return rows;
@@ -39,51 +46,87 @@ const getLoanById = async (loan_id) => {
 
 const createLoan = async (loan) => {
   const {
+    account_no,
     user_id,
     amount,
     interest_rate,
-    loan_type,
+    loan_type_id,
     loan_created,
+    loan_date,
     start_date,
-    end_date,
-    next_due_date,
-    balance,
-    profit,
-    status,
+    due_frequency,
+    due_tenure,
   } = loan;
 
-  const [result] = await db.query(
-    `INSERT INTO loans (
+  const conn = await db.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    const { frequency, frequencyType } = await splitFrequencyString(
+      due_frequency
+    );
+    const calculatedStartDate =
+      start_date ??
+      (await calculateStartDate(loan_date, frequency, frequencyType));
+
+    const calculatedEndDate = await calculateEndDate(
+      calculatedStartDate,
+      due_tenure,
+      frequency,
+      frequencyType
+    );
+
+    const updatedFields = {
+      start_date: calculatedStartDate,
+      end_date: calculatedEndDate,
+      next_due_date: calculatedStartDate,
+      balance: amount,
+      status: "active",
+    };
+    const [result] = await conn.query(
+      `INSERT INTO loans (
     user_id, 
     amount,
     interest_rate,
-    loan_type,
+    loan_type_id,
     loan_created,
+    loan_date,
     start_date,
     end_date,
     next_due_date,
     balance,
-    profit,
     status) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-    [
-      user_id,
-      amount,
-      interest_rate,
-      loan_type,
-      loan_created,
-      start_date,
-      end_date,
-      next_due_date,
-      balance,
-      profit,
-      status,
-    ]
-  );
+      [
+        user_id,
+        amount,
+        interest_rate,
+        loan_type_id,
+        loan_created,
+        loan_date,
+        updatedFields.start_date,
+        updatedFields.end_date,
+        updatedFields.next_due_date,
+        updatedFields.balance,
+        updatedFields.status,
+      ]
+    );
 
-  return {
-    loan_id: result.insertId,
-    ...loan,
-  };
+    const [updateAccount] = await conn.query(
+      `UPDATE accounts SET balance=balance - ? WHERE account_no=?`,
+      [amount, account_no]
+    );
+    const [newLoan] = await conn.query("SELECT * FROM loans WHERE loan_id=?", [
+      result.insertId,
+    ]);
+
+    await conn.commit();
+    return newLoan;
+  } catch (error) {
+    await conn.rollback();
+    throw error;
+  } finally {
+    conn.release();
+  }
 };
 
 const updateLoan = async (loan) => {

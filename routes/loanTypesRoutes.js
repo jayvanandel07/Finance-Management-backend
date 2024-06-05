@@ -17,6 +17,7 @@ const createLoanTypeValidator = [
   body("type_name").notEmpty().withMessage("type_name is required."),
   body("interest_rate").notEmpty().withMessage("interest_rate is required."),
   body("tenure").notEmpty().withMessage("tenure is required."),
+  body("frequency").notEmpty().withMessage("frequency is required."),
   validate, // Run validation middleware
 ];
 

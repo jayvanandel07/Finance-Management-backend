@@ -16,7 +16,7 @@ const getLoanTypeById = async (loan_type_id) => {
 };
 
 const createLoanType = async (loan_type) => {
-  const { type_name, interest_rate, tenure } = loan_type;
+  const { type_name, interest_rate, tenure, frequency } = loan_type;
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -28,8 +28,8 @@ const createLoanType = async (loan_type) => {
       throw new HttpError("Loan Type already Exists", 409);
     }
     const [result] = await conn.query(
-      "INSERT INTO loan_types (type_name,interest_rate,tenure) VALUES (?,?,?)",
-      [type_name, interest_rate, tenure]
+      "INSERT INTO loan_types (type_name,interest_rate,tenure,frequency) VALUES (?,?,?,?)",
+      [type_name, interest_rate, tenure, frequency]
     );
 
     await conn.commit();
@@ -62,13 +62,15 @@ const updateLoanType = async (loan_type) => {
       type_name: type_name ?? existingLoanType[0].type_name,
       interest_rate: interest_rate ?? existingLoanType[0].interest_rate,
       tenure: tenure ?? existingLoanType[0].tenure,
+      frequency: frequency ?? existingLoanType[0].frequency,
     };
     const [result] = await conn.query(
-      "UPDATE loan_types SET type_name=?,interest_rate=?,tenure=? WHERE loan_type_id=?",
+      "UPDATE loan_types SET type_name=?,interest_rate=?,tenure=?,frequency=? WHERE loan_type_id=?",
       [
         updatedFields.type_name,
         updatedFields.interest_rate,
         updatedFields.tenure,
+        updatedFields.frequency,
         loan_type_id,
       ]
     );
