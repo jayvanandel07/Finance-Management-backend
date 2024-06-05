@@ -5,7 +5,7 @@ const { param, body } = require("express-validator");
 
 const router = express.Router();
 
-const getLoanByIdValidator = [
+const loan_idValidator = [
   param("loan_id").notEmpty().withMessage("Loan_id is required."),
   validate,
 ];
@@ -22,21 +22,12 @@ const createLoanValidator = [
   validate,
 ];
 
-const updateDeleteLoanValidator = [
-  param("loan_id").notEmpty().withMessage("loan_id is required"),
-  validate,
-];
-
 router.get("/", loansController.getAllLoans);
-router.get("/:loan_id", getLoanByIdValidator, loansController.getLoanById);
+router.get("/:loan_id", loan_idValidator, loansController.getLoanById);
 
 router.post("/", createLoanValidator, loansController.createLoan);
-router.put("/:loan_id", updateDeleteLoanValidator, loansController.updateLoan);
+router.put("/:loan_id", loan_idValidator, loansController.updateLoan);
 
-router.delete(
-  "/:loan_id",
-  updateDeleteLoanValidator,
-  loansController.deleteLoanById
-);
+router.delete("/:loan_id", loan_idValidator, loansController.deleteLoan);
 
 module.exports = router;

@@ -58,24 +58,80 @@ async function calculateEndDate(startDate, tenure, frequency, frequencyType) {
   return endDate;
 }
 
-async function calculateNextDueDate(currentDate, frequency, frequencyType) {
-  let nextDueDate = new Date(currentDate);
+async function calculateNextDueDate(
+  frequency,
+  frequencyType,
+  startDate,
+  endDate
+) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const now = new Date();
+
+  if (now > end) {
+    return now; // If the current date is past the end date, return the current date
+  }
+
+  let nextDueDate = new Date(start);
+
+  // Calculate the difference in time from the start date to the current date in milliseconds
+  const timeDiff = now - start;
+
+  let intervalsPassed;
 
   switch (frequencyType.toLowerCase()) {
     case "weeks":
-      nextDueDate.setDate(nextDueDate.getDate() + frequency * 7);
+      intervalsPassed = Math.ceil(
+        timeDiff / (frequency * 7 * 24 * 60 * 60 * 1000)
+      );
+      nextDueDate.setDate(start.getDate() + intervalsPassed * frequency * 7);
       break;
     case "days":
-      nextDueDate.setDate(nextDueDate.getDate() + frequency);
+      intervalsPassed = Math.ceil(timeDiff / (frequency * 24 * 60 * 60 * 1000));
+      nextDueDate.setDate(start.getDate() + intervalsPassed * frequency);
       break;
     case "months":
-      nextDueDate.setMonth(nextDueDate.getMonth() + frequency);
+      intervalsPassed = Math.ceil(
+        (now.getFullYear() * 12 +
+          now.getMonth() -
+          (start.getFullYear() * 12 + start.getMonth())) /
+          frequency
+      );
+      nextDueDate.setMonth(start.getMonth() + intervalsPassed * frequency);
       break;
     case "years":
-      nextDueDate.setFullYear(nextDueDate.getFullYear() + frequency);
+      intervalsPassed = Math.ceil(
+        (now.getFullYear() - start.getFullYear()) / frequency
+      );
+      nextDueDate.setFullYear(
+        start.getFullYear() + intervalsPassed * frequency
+      );
       break;
     default:
       throw new Error("Invalid frequency type");
+  }
+
+  // Ensure the next due date is not past the end date
+  if (nextDueDate > end) {
+    return now;
+  }
+
+  // Ensure the next due date is not before the current date
+  if (nextDueDate < now) {
+    switch (frequencyType.toLowerCase()) {
+      case "weeks":
+        nextDueDate.setDate(nextDueDate.getDate() + frequency * 7);
+        break;
+      case "days":
+        nextDueDate.setDate(nextDueDate.getDate() + frequency);
+        break;
+      case "months":
+        nextDueDate.setMonth(nextDueDate.getMonth() + frequency);
+        break;
+      case "years":
+        nextDueDate.setFullYear(nextDueDate.getFullYear() + frequency);
+        break;
+    }
   }
 
   return nextDueDate;
