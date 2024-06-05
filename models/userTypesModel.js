@@ -20,7 +20,7 @@ const createUserType = async (user_type) => {
   const conn = await db.getConnection();
   try {
     const [existingUserType] = await conn.query(
-      "SELECT * FROM user_types WHERE type_name=? AND is_deleted=0",
+      "SELECT 1 FROM user_types WHERE type_name=? AND is_deleted=0",
       [type_name]
     );
     if (existingUserType.length > 0)
@@ -31,11 +31,19 @@ const createUserType = async (user_type) => {
       [type_name]
     );
     await conn.commit();
-    return { user_type_id: result.insertId, ...user_type };
+
+    const [newUserType] = await conn.query(
+      "SELECT * FROM user_types WHERE user_type_id=?",
+      [result.insertId]
+    );
+
+    return newUserType;
   } catch (error) {
     await conn.rollback();
 
     throw error;
+  } finally {
+    conn.release();
   }
 };
 
@@ -46,7 +54,7 @@ const updateUserType = async (user_type) => {
     await conn.beginTransaction();
 
     const [existingUserType] = await conn.query(
-      "SELECT * FROM user_types WHERE user_type_id = ?",
+      "SELECT 1 FROM user_types WHERE user_type_id = ?",
       [user_type_id]
     );
     if (existingUserType.length === 0) {
@@ -58,14 +66,17 @@ const updateUserType = async (user_type) => {
     );
 
     await conn.commit();
+    const [updatedUserType] = await conn.query(
+      "SELECT * FROM user_types WHERE user_type_id=?",
+      [user_type_id]
+    );
 
-    return {
-      user_type_id: existingUserType[0].user_type_id,
-      type_name,
-    };
+    return updatedUserType;
   } catch (error) {
     await conn.rollback();
     throw error;
+  } finally {
+    conn.release();
   }
 };
 
@@ -74,16 +85,6 @@ const deleteUserType = async (user_type_id) => {
 
   try {
     await conn.beginTransaction();
-    const [userTypeInOtherTables] = await conn.query(
-      "SELECT user_type_id FROM users WHERE user_type_id = ?",
-      [user_type_id]
-    );
-    if (userTypeInOtherTables.length > 0) {
-      throw new HttpError(
-        "Cannot delete user type due to foreign key constraint",
-        400
-      );
-    }
 
     const [existingUserType] = await conn.query(
       "SELECT * FROM user_types WHERE user_type_id = ?",
@@ -93,23 +94,35 @@ const deleteUserType = async (user_type_id) => {
       throw new HttpError("User Type does not Exist", 404);
     }
 
-    const [result] = await conn.query(
-      "UPDATE user_types SET is_deleted = TRUE WHERE user_type_id=?",
+    const [deleteUserType] = await conn.query(
+      "UPDATE user_types SET is_deleted = 1 WHERE user_type_id=?",
+      [user_type_id]
+    );
+    const [deleteUsers] = await conn.query(
+      "UPDATE users SET is_deleted=1 WHERE user_type_id=?",
       [user_type_id]
     );
 
     await conn.commit();
+    const [deletedUserType] = await conn.query(
+      "SELECT * FROM user_types WHERE user_type_id=?",
+      [user_type_id]
+    );
+    const [deletedUsers] = await conn.query(
+      "SELECT * FROM users WHERE user_type_id=?",
+      [user_type_id]
+    );
 
     return {
       message: "user type successfully deleted!",
-      user_type_deleted: {
-        user_type_id: existingUserType[0].user_type_id,
-        type_name: existingUserType[0].type_name,
-      },
+      user_type_deleted: deletedUserType,
+      users_deleted: deletedUsers,
     };
   } catch (error) {
     await conn.rollback();
     throw error;
+  } finally {
+    conn.release();
   }
 };
 module.exports = {

@@ -4,8 +4,8 @@ const getUsers = async () => {
   return await usersModel.getUsers();
 };
 
-const getUserByIdOrName = async (user) => {
-  return await usersModel.getUserByIdOrName(user);
+const getUserById = async (user_id) => {
+  return await usersModel.getUserById(user_id);
 };
 
 const createUser = async (user) => {
@@ -14,14 +14,14 @@ const createUser = async (user) => {
 const updateUser = async (user) => {
   return await usersModel.updateUser(user);
 };
-const deleteUserById = async (user_id) => {
-  return await usersModel.deleteUserById(user_id);
+const deleteUser = async (user_id) => {
+  return await usersModel.deleteUser(user_id);
 };
 
 module.exports = {
   getUsers,
-  getUserByIdOrName,
+  getUserById,
   createUser,
   updateUser,
-  deleteUserById,
+  deleteUser,
 };

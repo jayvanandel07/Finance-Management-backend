@@ -8,10 +8,10 @@ exports.getUsers = async (req, res, next) => {
     next(error);
   }
 };
-exports.getUserByIdOrName = async (req, res, next) => {
+exports.getUserById = async (req, res, next) => {
   try {
-    const users = await usersService.getUserByIdOrName(req.params.user);
-    res.status(200).json(users);
+    const user = await usersService.getUserByIdOrName(req.params.user_id);
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }
@@ -35,9 +35,9 @@ exports.updateUser = async (req, res, next) => {
     next(error);
   }
 };
-exports.deleteUserById = async (req, res, next) => {
+exports.deleteUser = async (req, res, next) => {
   try {
-    const user = await usersService.deleteUserById(req.params.user_id);
+    const user = await usersService.deleteUser(req.params.user_id);
     res.status(200).json(user);
   } catch (error) {
     next(error);

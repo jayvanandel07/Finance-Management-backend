@@ -1,6 +1,6 @@
 const db = require("../config/db");
 const HttpError = require("../utils/httpError");
-const userService = require("../services/userService");
+
 const getAllTransactions = async () => {
   const [rows] = await db.query(
     `SELECT 
