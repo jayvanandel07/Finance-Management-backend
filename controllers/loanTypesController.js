@@ -8,10 +8,10 @@ exports.getAllLoanTypes = async (req, res, next) => {
     next(error);
   }
 };
-exports.getLoanTypeByName = async (req, res, next) => {
+exports.getLoanTypeById = async (req, res, next) => {
   try {
-    const loanType = await loanTypesService.getLoanTypeByName(
-      req.params.type_name
+    const loanType = await loanTypesService.getLoanTypeById(
+      req.params.loan_type_id
     );
     res.status(200).json(loanType);
   } catch (error) {
@@ -31,7 +31,7 @@ exports.createLoanType = async (req, res, next) => {
 exports.updateLoanType = async (req, res, next) => {
   try {
     const updatedLoanType = await loanTypesService.updateLoanType({
-      type_name: req.params.type_name,
+      loan_type_id: req.params.loan_type_id,
       ...req.body,
     });
     res.status(200).json(updatedLoanType);
@@ -41,7 +41,9 @@ exports.updateLoanType = async (req, res, next) => {
 };
 exports.deleteLoanType = async (req, res, next) => {
   try {
-    const deleteLoanType = await loanTypesService.deleteLoanType(req.body);
+    const deleteLoanType = await loanTypesService.deleteLoanType(
+      req.params.loan_type_id
+    );
     res.status(200).json(deleteLoanType);
   } catch (error) {
     next(error);

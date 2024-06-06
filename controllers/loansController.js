@@ -19,7 +19,10 @@ exports.getLoanById = async (req, res, next) => {
 };
 exports.createLoan = async (req, res, next) => {
   try {
-    const loan = await loansService.createLoan(req.body);
+    const loan = await loansService.createLoan({
+      loan_id: req.params.loan_id,
+      ...req.body,
+    });
     res.status(200).json(loan);
   } catch (error) {
     next(error);
@@ -36,11 +39,9 @@ exports.updateLoan = async (req, res, next) => {
     next(error);
   }
 };
-exports.deleteLoanById = async (req, res, next) => {
+exports.deleteLoan = async (req, res, next) => {
   try {
-    const loan = await loansService.deleteLoanById(
-      parseInt(req.params.loan_id)
-    );
+    const loan = await loansService.deleteLoan(parseInt(req.params.loan_id));
     res.status(200).json(loan);
   } catch (error) {
     next(error);

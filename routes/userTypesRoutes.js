@@ -1,34 +1,45 @@
 const express = require("express");
 const userTypesController = require("../controllers/userTypesController");
 const { validate } = require("../middlewares/validator");
-const { body } = require("express-validator");
+const { param, body } = require("express-validator");
 
 const router = express.Router();
 
-const createDeleteUserTypeValidator = [
-  body("type_name").notEmpty().withMessage("type_name is required"),
-  validate, // Run validation middleware
+const getUserTypeByIdValidator = [
+  param("user_type_id").notEmpty().withMessage("user_type_id is required."),
+  validate,
+];
+const createUserTypeValidator = [
+  body("type_name").notEmpty().withMessage("type_name is required."),
+  validate,
 ];
 const updateUserTypeValidator = [
-  body("type_name").notEmpty().withMessage("type_name is required"),
-  body("updated_type_name")
-    .notEmpty()
-    .withMessage("updated_type_name is required"),
-  validate, // Run validation middleware
+  param("user_type_id").notEmpty().withMessage("user_type_id is required."),
+  body("type_name").notEmpty().withMessage("type_name is required."),
+  validate,
+];
+
+const deleteUserTypeValidator = [
+  param("user_type_id").notEmpty().withMessage("user_type_id is required."),
+  validate,
 ];
 
 router.get("/", userTypesController.getAllUserTypes);
-router.get("/:type_name", userTypesController.getUserTypeByName);
-
-router.post(
-  "/",
-  createDeleteUserTypeValidator,
-  userTypesController.createUserType
+router.get(
+  "/:user_type_id",
+  getUserTypeByIdValidator,
+  userTypesController.getUserTypeById
 );
-router.put("/", updateUserTypeValidator, userTypesController.updateUserType);
+
+router.post("/", createUserTypeValidator, userTypesController.createUserType);
+router.put(
+  "/:user_type_id",
+  updateUserTypeValidator,
+  userTypesController.updateUserType
+);
 router.delete(
-  "/",
-  createDeleteUserTypeValidator,
+  "/:user_type_id",
+  deleteUserTypeValidator,
   userTypesController.deleteUserType
 );
 

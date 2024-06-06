@@ -10,7 +10,7 @@ const getTransactionByIdValidator = [
   validate,
 ];
 const createTransactionValidator = [
-  body("user_id").notEmpty().withMessage("user_id is required"),
+  body("account_no").notEmpty().withMessage("account_no is required"),
   body("amount").notEmpty().withMessage("amount is required"),
   body("transaction_type")
     .notEmpty()
