@@ -16,7 +16,7 @@ const getAllTransactions = async () => {
     FROM transactions AS t 
     JOIN accounts AS a
     ON t.account_no=a.account_no 
-    JOIN users AS u ON a.user_id=u.user_id WHERE is_deleted=0`
+    JOIN users AS u ON a.user_id=u.user_id WHERE t.is_deleted=0`
   );
   return rows;
 };
@@ -35,7 +35,7 @@ const getTransactionById = async (transaction_id) => {
     FROM transactions AS t 
     JOIN accounts AS a
     ON t.account_no=a.account_no 
-    JOIN users AS u ON a.user_id=u.user_id WHERE  t.transaction_id=? AND is_deleted=0 `,
+    JOIN users AS u ON a.user_id=u.user_id WHERE  t.transaction_id=? AND t.is_deleted=0 `,
     [transaction_id]
   );
   return rows;
