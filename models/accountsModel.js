@@ -47,7 +47,7 @@ const getAccountsByUserId = async (user_id) => {
 };
 
 const createAccount = async (account) => {
-  const { account_no, user_id, balance } = account;
+  const { account_no, name, user_id, balance } = account;
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -62,8 +62,8 @@ const createAccount = async (account) => {
     }
 
     const [result] = await conn.query(
-      "INSERT INTO accounts (account_no, user_id, balance) VALUES (?, ?, ?)",
-      [account_no, user_id, balance]
+      "INSERT INTO accounts (account_no, name, user_id, balance) VALUES (?, ?, ?, ?)",
+      [account_no, name, user_id, balance]
     );
 
     await conn.commit();

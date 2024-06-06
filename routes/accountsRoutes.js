@@ -15,6 +15,7 @@ const getAccountsByUserIdValidator = [
 ];
 const createAccountValidator = [
   body("account_no").notEmpty().withMessage("account_no is required."),
+  body("name").notEmpty().withMessage("account_no is required."),
   body("user_id").notEmpty().withMessage("user_id is required."),
   body("balance").notEmpty().withMessage("balance is required."),
   validate,
