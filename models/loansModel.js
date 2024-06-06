@@ -1,10 +1,12 @@
 const db = require("../config/db");
+const { loanStatus, transactionType } = require("../constants/enums");
 const {
   splitFrequencyString,
   calculateStartDate,
   calculateEndDate,
   calculateNextDueDate,
 } = require("../utils/common.service");
+const transactionModel = require("./transactionsModel.js");
 const HttpError = require("../utils/httpError");
 
 const getAllLoans = async () => {
@@ -46,7 +48,7 @@ const getLoanById = async (loan_id) => {
 
 const createLoan = async (loan) => {
   const {
-    account_no,
+    transactions,
     user_id,
     amount,
     interest_rate,
@@ -87,9 +89,43 @@ const createLoan = async (loan) => {
       end_date: calculatedEndDate,
       next_due_date: calculatedNextDueDate,
       balance: amount,
-      status: "active",
+      status: loanStatus.ACTIVE,
     };
-    const [result] = await conn.query(
+
+    let transactionIds = [];
+    for (let transaction of transactions) {
+      let transactionData = {
+        account_no: transaction.account_no,
+        amount: transaction.amount,
+        transaction_type: transactionType.DEBIT,
+        transaction_date: loan_date,
+        description: "Loan sanctioned to loan",
+      };
+
+      const [createTransactionQuery] = await conn.query(
+        `INSERT INTO transactions (
+          account_no, amount, transaction_type, transaction_date, description) VALUES (?,?,?,?,?)`,
+        [
+          transactionData.account_no,
+          transactionData.amount,
+          transactionData.transaction_type,
+          transactionData.transaction_date,
+          transactionData.description,
+        ]
+      );
+
+      await conn.query(
+        `UPDATE accounts SET balance=balance${
+          transactionData.transaction_type === transactionType.CREDIT
+            ? "+"
+            : "-"
+        }? where account_no=?`,
+        [transactionData.amount, transactionData.account_no]
+      );
+
+      transactionIds.push(createTransactionQuery.insertId);
+    }
+    const [createLoanQuery] = await conn.query(
       `INSERT INTO loans (
     user_id, 
     amount,
@@ -116,17 +152,43 @@ const createLoan = async (loan) => {
         updatedFields.status,
       ]
     );
-
-    const [updateAccount] = await conn.query(
-      `UPDATE accounts SET balance=balance - ? WHERE account_no=?`,
-      [amount, account_no]
-    );
+    const loan_created_string = loan_created.toLowerCase();
+    if (loan_created_string !== "as new") {
+      const closedLoanIds = loan_created_string
+        .match(/\d+/g)
+        .map((id) => parseInt(id));
+      try {
+        for (let closed_loan_id in closedLoanIds) {
+          await conn.query(
+            "INSERT INTO LoanToClosedLoans (loan_id,closed_loan_id) VALUES (?,?)",
+            [createLoanQuery.insertId, closed_loan_id]
+          );
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+    for (let transaction_id of transactionIds) {
+      await conn.query(
+        "INSERT INTO LoanToTransactions (loan_id,transaction_id) VALUES (?,?)",
+        [createLoanQuery.insertId, transaction_id]
+      );
+    }
     const [newLoan] = await conn.query("SELECT * FROM loans WHERE loan_id=?", [
-      result.insertId,
+      createLoanQuery.insertId,
     ]);
 
+    const [newTransactions] = await conn.query(
+      `SELECT * FROM transactions WHERE transaction_id IN (${transactionIds.join(
+        ","
+      )})`
+    );
+
     await conn.commit();
-    return newLoan;
+    return {
+      new_loan: newLoan,
+      new_transactions: newTransactions,
+    };
   } catch (error) {
     await conn.rollback();
     throw error;
@@ -138,7 +200,7 @@ const createLoan = async (loan) => {
 const updateLoan = async (loan) => {
   const {
     loan_id,
-    account_no,
+    transactions,
     user_id,
     amount,
     interest_rate,
@@ -189,7 +251,55 @@ const updateLoan = async (loan) => {
         existingLoan[0].balance +
         ((amount ?? existingLoan[0].amount) - existingLoan[0].amount),
     };
+    let transactionIds = [];
+    for (let transaction of transactions) {
+      const [existingTransactionQuery] = await conn.query(
+        "SELECT * FROM transactions WHERE transaction_id=?",
+        [transaction.transaction_id]
+      );
+      let transactionData = {
+        transaction_id: transaction.transaction_id,
+        account_no: transaction.account_no,
+        amount: transaction.amount,
+        transaction_type: transactionType.DEBIT,
+        transaction_date: loan_date,
+        description: "Loan sanctioned to loan (updated)",
+      };
 
+      const [updateTransactionQuery] = await conn.query(
+        `UPDATE transactions SET
+          account_no=?, amount=?, transaction_type=?, transaction_date=?, description=? WHERE transaction_id=?`,
+        [
+          transactionData.account_no,
+          transactionData.amount,
+          transactionData.transaction_type,
+          transactionData.transaction_date,
+          transactionData.description,
+          transactionData.transaction_id,
+        ]
+      );
+      if (
+        existingTransactionQuery[0].account_no === transactionData.account_no
+      ) {
+        await conn.query(
+          `UPDATE accounts SET balance=balance -${
+            transactionData.amount - existingTransactionQuery[0].amount
+          } where account_no=?`,
+          [transactionData.account_no]
+        );
+      } else {
+        await conn.query(
+          `UPDATE accounts SET balance=balance + ${existingTransactionQuery[0].amount} where account_no=?`,
+          [existingTransactionQuery[0].account_no]
+        );
+        await conn.query(
+          `UPDATE accounts SET balance=balance -${transactionData.amount} where account_no=?`,
+          [transactionData.account_no]
+        );
+      }
+
+      transactionIds.push(updateTransactionQuery.insertId);
+    }
     const [loans] = await conn.query(
       `UPDATE loans SET 
       user_id=?, 
@@ -217,18 +327,42 @@ const updateLoan = async (loan) => {
         loan_id,
       ]
     );
-    const [updateAccount] = await conn.query(
-      `UPDATE accounts SET balance=balance - ? WHERE account_no=?`,
-      [(amount ?? existingLoan[0].amount) - existingLoan[0].amount, account_no]
+    const [deleteLoanToClosedLoansQuery] = await conn.query(
+      "DELETE FROM LoanToClosedLoans WHERE loan_id=?",
+      [loan_id]
     );
+    const loan_created_string = loan_created.toLowerCase();
+    if (loan_created_string !== "as new") {
+      const closedLoanIds = loan_created_string
+        .match(/\d+/g)
+        .map((id) => parseInt(id));
+      try {
+        for (let closed_loan_id in closedLoanIds) {
+          await conn.query(
+            "INSERT INTO LoanToClosedLoans (loan_id,closed_loan_id) VALUES (?,?)",
+            [loan_id, closed_loan_id]
+          );
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+
     const [updatedLoan] = await conn.query(
       "SELECT * FROM loans WHERE loan_id=?",
       [loan_id]
     );
+    const [updatedTransactions] = await conn.query(
+      `SELECT * FROM transactions WHERE transaction_id IN (${transactionIds.join(
+        ","
+      )})`
+    );
+
     await conn.commit();
     return {
       message: "Loan updated Successfully",
       loan_updated: updatedLoan,
+      loan_transactions: updatedTransactions,
     };
   } catch (error) {
     await conn.rollback();
