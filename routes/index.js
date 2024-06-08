@@ -5,6 +5,7 @@ const loanTypesRoutes = require("./loanTypesRoutes");
 const loansRoutes = require("./loansRoutes");
 const transactionsRoutes = require("./transactionsRoutes");
 const accountsRoutes = require("./accountsRoutes");
+const paymentsRoutes = require("./paymentsRoutes");
 
 module.exports = {
   healthCheckRoute,
@@ -14,4 +15,5 @@ module.exports = {
   loansRoutes,
   transactionsRoutes,
   accountsRoutes,
+  paymentsRoutes,
 };

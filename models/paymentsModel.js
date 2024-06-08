@@ -7,7 +7,7 @@ const getAllPayments = async () => {
     `SELECT 
     *
     FROM payments AS p
-    JOIN loan AS l
+    JOIN loans AS l
     ON p.loan_id=l.loan_id 
     JOIN transactions AS t 
     ON p.transaction_id=t.transaction_id 
@@ -21,7 +21,7 @@ const getPaymentById = async (transaction_id) => {
     `SELECT 
     *
     FROM payments AS p
-    JOIN loan AS l
+    JOIN loans AS l
     ON p.loan_id=l.loan_id 
     JOIN transactions AS t 
     ON p.transaction_id=t.transaction_id 
@@ -46,12 +46,12 @@ const createPayment = async (payment) => {
         amount,
         transaction.transaction_type,
         payment_date,
-        description,
+        transaction.description,
       ]
     );
     const [updateAccountQuery] = await conn.query(
       `UPDATE accounts SET  balance=balance ${
-        transaction.transactionType === "credit" ? "+" : "-"
+        transaction.transaction_type === transactionType.CREDIT ? "+" : "-"
       } ? WHERE account_no=?`,
       [amount, transaction.account_no]
     );
@@ -67,7 +67,7 @@ const createPayment = async (payment) => {
     );
     const [updatedAccount] = await conn.query(
       "SELECT * FROM accounts WHERE account_no=?",
-      [account_no]
+      [transaction.account_no]
     );
     const [newPayment] = await conn.query(
       "SELECT * FROM payments WHERE payment_id=?",

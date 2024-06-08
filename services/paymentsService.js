@@ -16,6 +16,4 @@ module.exports = {
   getAllPayments,
   getPaymentById,
   createPayment,
-  updatePayment,
-  deletePaymentById,
 };
