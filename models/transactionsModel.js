@@ -6,17 +6,18 @@ const getAllTransactions = async () => {
   const [rows] = await db.query(
     `SELECT 
     t.*, 
-    a.user_id,
+    a.account_no AS account_no,
+    a.name AS account_name,
     a.balance AS account_balance,
     u.name AS user_name,
     u.tamil_name AS user_tamil_name,
-    u.alias AD u.user_alias,
+    u.alias AS user_alias,
     u.phone AS user_phone,
     u.address AS user_address
     FROM transactions AS t 
     JOIN accounts AS a
     ON t.account_no=a.account_no 
-    JOIN users AS u ON a.user_id=u.user_id WHERE is_deleted=0`
+    JOIN users AS u ON a.user_id=u.user_id WHERE t.is_deleted=0`
   );
   return rows;
 };
@@ -25,17 +26,18 @@ const getTransactionById = async (transaction_id) => {
   const [rows] = await db.query(
     `SELECT 
     t.*, 
-    a.user_id,
+    a.account_no AS account_no,
+    a.name AS account_name,
     a.balance AS account_balance,
     u.name AS user_name,
     u.tamil_name AS user_tamil_name,
-    u.alias AD u.user_alias,
+    u.alias AS user_alias,
     u.phone AS user_phone,
     u.address AS user_address
     FROM transactions AS t 
     JOIN accounts AS a
     ON t.account_no=a.account_no 
-    JOIN users AS u ON a.user_id=u.user_id WHERE  t.transaction_id=? AND is_deleted=0 `,
+    JOIN users AS u ON a.user_id=u.user_id WHERE  t.transaction_id=? AND t.is_deleted=0 `,
     [transaction_id]
   );
   return rows;

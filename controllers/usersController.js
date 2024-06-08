@@ -10,7 +10,7 @@ exports.getUsers = async (req, res, next) => {
 };
 exports.getUserById = async (req, res, next) => {
   try {
-    const user = await usersService.getUserByIdOrName(req.params.user_id);
+    const user = await usersService.getUserById(req.params.user_id);
     res.status(200).json(user);
   } catch (error) {
     next(error);
