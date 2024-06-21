@@ -27,6 +27,7 @@ const getUserById = async (user_id) => {
 const createUser = async (user) => {
   const {
     user_id,
+    password,
     name,
     tamil_name,
     alias,
@@ -50,9 +51,10 @@ const createUser = async (user) => {
     }
 
     const [result] = await conn.query(
-      "INSERT INTO users (user_id, name, tamil_name, alias, email, phone, address, cibil, user_type_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO users (user_id,password, name, tamil_name, alias, email, phone, address, cibil, user_type_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         user_id,
+        password,
         name,
         tamil_name,
         alias,
@@ -81,6 +83,7 @@ const createUser = async (user) => {
 const updateUser = async (user) => {
   const {
     user_id,
+    password,
     name,
     tamil_name,
     alias,
@@ -107,6 +110,7 @@ const updateUser = async (user) => {
 
     const updatedFields = {
       user_id: user_id ?? existingUser[0].user_id,
+      password: password ?? existingUser[0].password,
       name: name ?? existingUser[0].name,
       tamil_name: tamil_name ?? existingUser[0].tamil_name,
       alias: alias ?? existingUser[0].alias,
@@ -119,9 +123,10 @@ const updateUser = async (user) => {
 
     // Update the user
     await conn.query(
-      "UPDATE users SET user_id=?, name=?, tamil_name=?, alias=?, email=?, phone=?, address=?, cibil=?, user_type_id=? WHERE user_id=?",
+      "UPDATE users SET user_id=?, password=?, name=?, tamil_name=?, alias=?, email=?, phone=?, address=?, cibil=?, user_type_id=? WHERE user_id=?",
       [
         updatedFields.user_id,
+        updatedFields.password,
         updatedFields.name,
         updatedFields.tamil_name,
         updatedFields.alias,
