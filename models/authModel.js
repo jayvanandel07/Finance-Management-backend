@@ -35,7 +35,7 @@ const login = async (user) => {
       throw new HttpError("Invalid email or password", 400);
     }
 
-    const token = generateToken(user);
+    const token = generateToken(user[0]);
     return { token };
   } catch (error) {
     throw new HttpError(error.message, 400);
