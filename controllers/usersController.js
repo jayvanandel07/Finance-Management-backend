@@ -10,10 +10,10 @@ exports.getUsers = async (req, res, next) => {
 };
 exports.getUsersByRole = async (req, res, next) => {
   try {
-    console.log(req.body);
+    let roles = req.params.role.split(",");
     const users = await usersService.getUsers();
-    const usersByRole = users.filter(
-      (user) => user.user_type_name === req.params.role
+    const usersByRole = users.filter((user) =>
+      roles.includes(user.user_type_name)
     );
     res.status(200).json(usersByRole);
   } catch (error) {
