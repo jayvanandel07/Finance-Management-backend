@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const { hashPassword } = require("../utils/authUtils");
 const HttpError = require("../utils/httpError");
 
 const getUsers = async () => {
@@ -37,6 +38,8 @@ const createUser = async (user) => {
     cibil,
     user_type_id,
   } = user;
+  const hashedPassword = await hashPassword(user.password ?? "user@123");
+
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -54,7 +57,7 @@ const createUser = async (user) => {
       "INSERT INTO users (user_id,password, name, tamil_name, alias, email, phone, address, cibil, user_type_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         user_id,
-        password,
+        hashedPassword,
         name,
         tamil_name,
         alias,
@@ -94,6 +97,7 @@ const updateUser = async (user) => {
     user_type_id,
     update_user_id,
   } = user;
+  const hashedPassword = await hashPassword(user.password);
 
   const conn = await db.getConnection();
   try {
@@ -110,7 +114,7 @@ const updateUser = async (user) => {
 
     const updatedFields = {
       user_id: user_id ?? existingUser[0].user_id,
-      password: password ?? existingUser[0].password,
+      password: hashedPassword ?? existingUser[0].password,
       name: name ?? existingUser[0].name,
       tamil_name: tamil_name ?? existingUser[0].tamil_name,
       alias: alias ?? existingUser[0].alias,

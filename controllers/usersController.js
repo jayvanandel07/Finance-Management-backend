@@ -8,6 +8,18 @@ exports.getUsers = async (req, res, next) => {
     next(error);
   }
 };
+exports.getUsersByRole = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const users = await usersService.getUsers();
+    const usersByRole = users.filter(
+      (user) => user.user_type_name === req.params.role
+    );
+    res.status(200).json(usersByRole);
+  } catch (error) {
+    next(error);
+  }
+};
 exports.getUserById = async (req, res, next) => {
   try {
     const user = await usersService.getUserById(req.params.user_id);

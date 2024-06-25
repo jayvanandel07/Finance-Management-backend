@@ -5,6 +5,10 @@ const { param, body } = require("express-validator");
 
 const router = express.Router();
 
+const userRoleValidator = [
+  param("role").notEmpty().withMessage("role field is required"),
+  validate, // Run validation middleware
+];
 const userIdValidator = [
   param("user_id")
     .isNumeric()
@@ -27,6 +31,7 @@ const createUserValidator = [
 
 router.get("/", usersController.getUsers);
 router.get("/:user_id", userIdValidator, usersController.getUserById);
+router.get("/role/:role", userRoleValidator, usersController.getUsersByRole);
 
 router.post("/", createUserValidator, usersController.createUser);
 router.put("/:user_id", userIdValidator, usersController.updateUser);

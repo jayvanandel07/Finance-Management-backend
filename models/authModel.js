@@ -6,11 +6,7 @@ const userModel = require("./usersModel");
 
 const register = async (user) => {
   try {
-    const hashedPassword = await hashPassword(user.password);
-    const User = await userModel.createUser({
-      ...user,
-      password: hashedPassword,
-    });
+    const User = await userModel.createUser(user);
 
     const token = generateToken(User[0]);
     return { token };
