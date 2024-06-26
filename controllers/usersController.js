@@ -30,7 +30,10 @@ exports.getUserById = async (req, res, next) => {
 };
 exports.createUser = async (req, res, next) => {
   try {
-    const user = await usersService.createUser(req.body);
+    const user = await usersService.createUser({
+      ...req.body,
+      user_type_id: process.env.BORROWER_ROLE,
+    });
     res.status(201).json(user);
   } catch (error) {
     next(error);

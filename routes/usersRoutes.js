@@ -25,7 +25,6 @@ const createUserValidator = [
     .if(body("email").exists({ checkFalsy: true }))
     .isEmail()
     .withMessage("Invalid email address"),
-  body("user_type_id").notEmpty().withMessage("user_type_id is required"),
   validate, // Run validation middleware
 ];
 
