@@ -57,6 +57,7 @@ const createLoan = async (loan) => {
     loan_date,
     start_date,
     due_frequency,
+    due_time_unit,
     due_tenure,
   } = loan;
 
@@ -64,9 +65,8 @@ const createLoan = async (loan) => {
   try {
     await conn.beginTransaction();
 
-    const { frequency, frequencyType } = await splitFrequencyString(
-      due_frequency
-    );
+    const frequency = due_frequency;
+    const frequencyType = due_time_unit;
     const calculatedStartDate =
       start_date ??
       (await calculateStartDate(loan_date, frequency, frequencyType));
@@ -99,7 +99,7 @@ const createLoan = async (loan) => {
         amount: transaction.amount,
         transaction_type: transactionType.DEBIT,
         transaction_date: loan_date,
-        description: "Loan sanctioned to loan",
+        description: `Loan sanctioned to ${user_id}`,
       };
 
       const [createTransactionQuery] = await conn.query(
@@ -210,6 +210,7 @@ const updateLoan = async (loan) => {
     start_date,
     balance,
     due_frequency,
+    due_time_unit,
     due_tenure,
   } = loan;
 
@@ -224,9 +225,8 @@ const updateLoan = async (loan) => {
     if (existingLoan.length === 0) {
       throw new HttpError("Loan does not Exist", 404);
     }
-    const { frequency, frequencyType } = await splitFrequencyString(
-      due_frequency
-    );
+    const frequency = due_frequency;
+    const frequencyType = due_time_unit;
     const calculatedStartDate =
       start_date ??
       (await calculateStartDate(loan_date, frequency, frequencyType));

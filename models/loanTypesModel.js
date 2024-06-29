@@ -16,7 +16,7 @@ const getLoanTypeById = async (loan_type_id) => {
 };
 
 const createLoanType = async (loan_type) => {
-  const { type_name, interest_rate, tenure, frequency } = loan_type;
+  const { type_name, interest_rate, tenure, frequency, time_unit } = loan_type;
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
@@ -28,8 +28,8 @@ const createLoanType = async (loan_type) => {
       throw new HttpError("Loan Type already Exists", 409);
     }
     const [result] = await conn.query(
-      "INSERT INTO loan_types (type_name,interest_rate,tenure,frequency) VALUES (?,?,?,?)",
-      [type_name, interest_rate, tenure, frequency]
+      "INSERT INTO loan_types (type_name,interest_rate,tenure,frequency,time_unit) VALUES (?,?,?,?,?)",
+      [type_name, interest_rate, tenure, frequency, time_unit]
     );
 
     await conn.commit();
@@ -48,7 +48,14 @@ const createLoanType = async (loan_type) => {
 };
 
 const updateLoanType = async (loan_type) => {
-  const { loan_type_id, type_name, interest_rate, tenure } = loan_type;
+  const {
+    loan_type_id,
+    type_name,
+    interest_rate,
+    tenure,
+    frequency,
+    time_unit,
+  } = loan_type;
   const conn = await db.getConnection();
   try {
     const [existingLoanType] = await conn.query(
@@ -63,14 +70,16 @@ const updateLoanType = async (loan_type) => {
       interest_rate: interest_rate ?? existingLoanType[0].interest_rate,
       tenure: tenure ?? existingLoanType[0].tenure,
       frequency: frequency ?? existingLoanType[0].frequency,
+      time_unit: time_unit ?? existingLoanType[0].time_unit,
     };
     const [result] = await conn.query(
-      "UPDATE loan_types SET type_name=?,interest_rate=?,tenure=?,frequency=? WHERE loan_type_id=?",
+      "UPDATE loan_types SET type_name=?,interest_rate=?,tenure=?,frequency=?,time_unit=? WHERE loan_type_id=?",
       [
         updatedFields.type_name,
         updatedFields.interest_rate,
         updatedFields.tenure,
         updatedFields.frequency,
+        updatedFields.time_unit,
         loan_type_id,
       ]
     );

@@ -16,16 +16,16 @@ async function calculateStartDate(loanDate, frequency, frequencyType) {
   let startDate = new Date(loanDate);
 
   switch (frequencyType.toLowerCase()) {
-    case "weeks":
+    case "week":
       startDate.setDate(startDate.getDate() + frequency * 7);
       break;
-    case "days":
+    case "day":
       startDate.setDate(startDate.getDate() + frequency);
       break;
-    case "months":
+    case "month":
       startDate.setMonth(startDate.getMonth() + frequency);
       break;
-    case "years":
+    case "year":
       startDate.setFullYear(startDate.getFullYear() + frequency);
       break;
     default:
@@ -39,16 +39,16 @@ async function calculateEndDate(startDate, tenure, frequency, frequencyType) {
   let endDate = new Date(startDate);
   tenure -= 1;
   switch (frequencyType.toLowerCase()) {
-    case "weeks":
+    case "week":
       endDate.setDate(endDate.getDate() + tenure * frequency * 7);
       break;
-    case "days":
+    case "day":
       endDate.setDate(endDate.getDate() + tenure * frequency);
       break;
-    case "months":
+    case "month":
       endDate.setMonth(endDate.getMonth() + tenure * frequency);
       break;
-    case "years":
+    case "year":
       endDate.setFullYear(endDate.getFullYear() + tenure * frequency);
       break;
     default:
@@ -80,17 +80,17 @@ async function calculateNextDueDate(
   let intervalsPassed;
 
   switch (frequencyType.toLowerCase()) {
-    case "weeks":
+    case "week":
       intervalsPassed = Math.ceil(
         timeDiff / (frequency * 7 * 24 * 60 * 60 * 1000)
       );
       nextDueDate.setDate(start.getDate() + intervalsPassed * frequency * 7);
       break;
-    case "days":
+    case "day":
       intervalsPassed = Math.ceil(timeDiff / (frequency * 24 * 60 * 60 * 1000));
       nextDueDate.setDate(start.getDate() + intervalsPassed * frequency);
       break;
-    case "months":
+    case "month":
       intervalsPassed = Math.ceil(
         (now.getFullYear() * 12 +
           now.getMonth() -
@@ -99,7 +99,7 @@ async function calculateNextDueDate(
       );
       nextDueDate.setMonth(start.getMonth() + intervalsPassed * frequency);
       break;
-    case "years":
+    case "year":
       intervalsPassed = Math.ceil(
         (now.getFullYear() - start.getFullYear()) / frequency
       );
@@ -119,16 +119,16 @@ async function calculateNextDueDate(
   // Ensure the next due date is not before the current date
   if (nextDueDate < now) {
     switch (frequencyType.toLowerCase()) {
-      case "weeks":
+      case "week":
         nextDueDate.setDate(nextDueDate.getDate() + frequency * 7);
         break;
-      case "days":
+      case "day":
         nextDueDate.setDate(nextDueDate.getDate() + frequency);
         break;
-      case "months":
+      case "month":
         nextDueDate.setMonth(nextDueDate.getMonth() + frequency);
         break;
-      case "years":
+      case "year":
         nextDueDate.setFullYear(nextDueDate.getFullYear() + frequency);
         break;
     }
